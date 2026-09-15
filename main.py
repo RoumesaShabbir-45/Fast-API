@@ -12,8 +12,6 @@ def about():
     return{"message":"this is about page"}
 
 #Users
-@app.get("/users")
-def users():
-    return{
-        "users":["Ahmad","Roumesa","Hamza"]
-    }
+@app.get("/users/{user_id}")
+def get_user(user_id):
+    return{"user_id": user_id}
