@@ -1,17 +1,20 @@
 from fastapi import FastAPI
 
 app = FastAPI()
-#home
-@app.get("/")
-def home():
-    return{"message":"Hello fastapi with vern"}
-
-#About
-@app.get("/about")
-def about():
-    return{"message":"this is about page"}
-
 #Users
-@app.get("/users/{user_id}")
-def get_user(user_id: str):
-    return{"user_id": user_id}
+@app.get("/users")
+def get_user(name: str=None):
+    return{"Name": name}
+
+#Default value
+@app.get("/products")
+def get_user(limit: int=10):
+    return{"limit": limit}
+
+#Mulitiquery parmas
+@app.get("/items")
+def get_user(name: str=None , price: int=10):
+    return{"name": name,
+          "price": price
+          }
+
