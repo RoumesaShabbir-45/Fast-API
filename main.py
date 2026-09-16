@@ -6,6 +6,7 @@ app = FastAPI()
 class User(BaseModel):
     name:str
     age:int
+    email:str
 #Users
 @app.post("/create_users")
 def create_user(user:User):
