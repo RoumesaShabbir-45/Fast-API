@@ -3,29 +3,56 @@ from pydantic import BaseModel
 
 app = FastAPI()
 
-# class User(BaseModel):
-#     name:str
-#     age:int
-#     email:str
-# #Users
-# @app.post("/create_users")
-# def create_user(user:User):
-#     return{
-#         "message":"user created",
-#         "data":user
-#            }
+todos = []
+class Todo(BaseModel):
+    id: int
+    title: str
+    completed: bool
 
-class Address(BaseModel):
-    city:str
-    pincode:int
 
-class User(BaseModel):
-    name:str
-    age:int
-    address:Address
+    #create api
+@app.post("/todos")
+def create_todo(todo: Todo):
+        todos.append(todo)
+        return {
+            "message":"TODO added",
+            "data":todo
+        }
+  #read api
+@app.get("/todos")
+def get_todos():
+        return {
+           "todos": todos
+        }
+    #single data fetch (path params)
+@app.get("/todos/{todo_id}")
+def get_todo(todo_id: int):
+        for todo in todos:
+            return
+        {"error":"Todo not Found"}
 
-@app.post("/created_user")
-def created_user(user:User):
-    return{
-        user
-    }
+    #update api
+@app.put("/todos/{todo_id}")
+def update_todo(todo_id: int, updated_todo: Todo):
+        for index, todo in enumerate(todos):
+            if todo.id == todo_id:
+                todos[index] = updated_todo
+                return {
+                    "message":"data updated",
+                    "data":updated_todo
+                }
+            return {"error":"Todo not Found"}
+
+     #delete api
+@app.delete("/todos/{todo_id}")
+def delete_todo(todo_id:int):
+             for index, todo in enumerate(todos):
+                 if todo.id == todo_id:
+                     todos.pop(index)
+                     return {"message":"data deleted"}
+                 return {"error":"Todo not Found"}
+
+            
+    
+
+    
