@@ -1,21 +1,34 @@
-from fastapi import FastAPI
-from pydantic import BaseModel
+from fastapi import FastAPI, status, HTTPException
+
 
 app = FastAPI()
 
-class User(BaseModel):
-    name:str
-    age:int
-password:str
+@app.post("/created_user",status_code= status.HTTP_201_CREATED)
+def create_user():
+ return{
+  "message":"user created"
+ }
 
-class UserResponse(BaseModel):
-     name:str
-     age:int
-
-@app.get("/users", response_model=UserResponse)
-def get_user():
-    return{
-        "name":"mohit",
-        "age":24,
-        "password":"123456"
+#custom response
+@app.get("/user")
+def get_users():
+  return{
+    "ststus":"success",
+    "message":"userFetched",
+    "data":{
+      "name":"mohit",
+      "age": 24
     }
+  }
+#basic error handler
+@app.get("/users/{user_id}")
+def get_user(user_id:int):
+  if user_id !=1:
+    raise HTTPException(
+      status_code= 404,
+      detail="user not found"
+    )
+  return{
+    "id":"1",
+    "name":"mohit"
+  }
