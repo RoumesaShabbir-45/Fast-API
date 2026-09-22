@@ -1,23 +1,15 @@
 from fastapi import FastAPI
-from fastapi.middleware.cors import CORSMiddleware
-# import os
-# from dotenv import load_dotenv
-from config import settings
 
 app= FastAPI()
 
-# load_dotenv()
-
-
-app.add_middleware (
-    CORSMiddleware,
-    allow_origins=settings.Origins,
-    allow_credentials= True,
-    allow_methods=["*"],
-    allow_headers=["*"]
-)
 @app.get("/")
 def home():
     return{
-        "message":"CORS Enable API"
+        "message":"hellow world"
+    }
+
+@app.get("/add")
+def add(a:int ,b:int):
+    return{
+        "result":a+b
     }
