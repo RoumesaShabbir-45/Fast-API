@@ -1,26 +1,40 @@
-from fastapi import FastAPI,HTTPException
+from fastapi import FastAPI
 import requests
+from bs4 import BeautifulSoup
+import time
 
-app= FastAPI()
+app=FastAPI()
 
-#GET all api
-@app.get("/posts")
-def get_posts():
-    url= "https://jsonplaceholder.typicode.com/posts"
-    response = requests.get(url)
-    return response.json()
+#cache storage
+cache_data=[]
+last_fetch=0
 
-#get single post
-@app.get("/posts/{post_id}")
-def get_post(post_id:int):
-    url=f"https://jsonplaceholder.typicode.com/posts/{post_id}"
+@app.get("/news")
+def get_news():
+    global cache_data,last_fetch
+    Start= time.time()
 
-    response =requests.get(url)
+    if time.time()-last_fetch>60:
+        print("Fetching Fresh Data")
 
-#error handling 
-    if response.status_code !=200:
-        raise HTTPException(
-            status_code=404,
-            detail="page not found"
-        )
-    return response.json()
+        url="https://news.ycombinator.com/"
+        response = requests.get(url)
+        Soup= BeautifulSoup(response.text,"html.parser")
+
+        cache_data=[
+            item.text for item in Soup .find_all("span",class_="titleline")
+        ]
+
+        last_fetch = time.time()
+    else:
+        print("Using catche Data")
+
+    end = time.time()
+
+    time_taken = round(end-Start,4)
+
+    print ("Time Taken:", time_taken)
+    return{
+        "time_taken":time_taken,
+        "data":cache_data[:5]
+    }
